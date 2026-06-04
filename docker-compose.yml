@@ -1,21 +1,47 @@
-services:
-  app:
-    build: .
-    ports:
-      - "8000:8000"
-    depends_on:
-      - db
-    environment:
-      - DATABASE_URL=postgresql://user:password@db:5432/notesdb
+version: '3.8'
 
+services:
   db:
-    image: postgres:15
+    image: postgres:15-alpine
+    container_name: note_db
+    restart: always
     environment:
       POSTGRES_USER: user
       POSTGRES_PASSWORD: password
       POSTGRES_DB: notesdb
     volumes:
       - postgres-data:/var/lib/postgresql/data
+    networks:
+      - note_network
+
+  app:
+    build: .
+    container_name: note_backend
+    restart: always
+    ports:
+      - "8000:8000"
+    environment:
+      - DATABASE_URL=postgresql+psycopg2://user:password@db:5432/notesdb
+    depends_on:
+      - db
+    networks:
+      - note_network
+
+#  nginx:
+#    build: ./nginx
+#    container_name: note_nginx
+#    ports:
+#      - "80:80"
+#    volumes:
+#      - ./frontend:/usr/share/nginx/html:ro
+#    depends_on:
+#      - app
+#    networks:
+#     - note_network
+
+networks:
+  note_network:
+    driver: bridge
 
 volumes:
   postgres-data:
