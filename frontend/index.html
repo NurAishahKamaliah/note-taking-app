@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Note WebApp</title>
+    <style>
+        :root {
+            --bg-color: #e6dfd3;       /* Warm Biscuit Beige */
+            --panel-bg: #ffffff;       /* Pure white panels */
+            --primary: #6d4c41;        /* Warm Milk Chocolate Brown */
+            --primary-light: #d7ccc8;  /* Soft Crust/Almond Pastel */
+            --success: #e0b1cb;        /* Soft Pastel Peach / Berry Tart */
+            --success-hover: #be95c4;
+            --warning: #f7d6c8;        /* Soft Butter Cream Cream */
+            --warning-hover: #f2b5a0;
+            --danger: #e5989b;         /* Pastry Rose / Strawberry Glaze */
+            --danger-hover: #b5828c;
+            --text-main: #4e342e;       /* Deep Cocoa Brown */
+            --text-muted: #8d6e63;      /* Lighter Cinnamon Brown */
+            --border: #f5ebe0;          /* Soft dough/cream lines */
+        }
+
+        body { 
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; 
+            background-color: var(--bg-color); 
+            margin: 0; 
+            padding: 50px 20px; 
+            display: flex; 
+            justify-content: center;
+            color: var(--text-main);
+            letter-spacing: -0.01em;
+        }
+
+        /* Side-by-Side Dashboard Layout */
+        .dashboard-wrapper { 
+            display: flex; 
+            gap: 40px; 
+            width: 100%; 
+            max-width: 1100px; 
+            align-items: flex-start;
+        }
+
+        /* Left Column: Form Box */
+        .left-column { 
+            background: var(--panel-bg); 
+            padding: 40px; 
+            border-radius: 20px; 
+            box-shadow: 0 4px 20px rgba(109, 76, 65, 0.04);
+            flex: 1; 
+            position: sticky;
+            top: 50px;
+            border: 1px solid var(--border);
+        }
+
+        /* Right Column: Notes List Column */
+        .right-column { 
+            background: var(--panel-bg); 
+            padding: 40px; 
+            border-radius: 20px; 
+            box-shadow: 0 4px 20px rgba(109, 76, 65, 0.04);
+            flex: 1.4; 
+            min-height: 480px;
+            border: 1px solid var(--border);
+        }
+
+        /* Custom Pastry Shaded Title Banners */
+        .title-banner-left {
+            background-color: #f7d6c8; /* Soft Peach Pastry Cream */
+            color: #5d4037;            /* Deep Toasted Espresso Brown */
+            margin: -40px -40px 28px -40px;
+            padding: 22px 40px;
+            border-top-left-radius: 19px;
+            border-top-right-radius: 19px;
+        }
+
+        .title-banner-right {
+            background-color: #ede0d4; /* Warm Vanilla/Sugar Glaze */
+            color: #7f5539;            /* Sweet Chestnut Brown */
+            margin: -40px -40px 28px -40px;
+            padding: 22px 40px;
+            border-top-left-radius: 19px;
+            border-top-right-radius: 19px;
+        }
+
+        h2, h3 { 
+            margin: 0;
+            font-weight: 600;
+            font-size: 22px;
+            letter-spacing: -0.02em;
+        }
+
+        .form-group { margin-bottom: 24px; }
+        
+        label { 
+            display: block; 
+            margin-bottom: 8px; 
+            font-weight: 600; 
+            color: var(--text-muted);
+            font-size: 13.5px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        input[type="text"], textarea, select { 
+            width: 100%; 
+            padding: 14px; 
+            border: 1px solid var(--border); 
+            border-radius: 12px; 
+            box-sizing: border-box; 
+            font-size: 14px; 
+            background-color: #fffdfb; 
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            color: var(--text-main);
+        }
+
+        input[type="text"]:focus, textarea:focus, select:focus { 
+            border-color: var(--primary-light); 
+            outline: none; 
+            background-color: var(--panel-bg);
+            box-shadow: 0 0 0 4px rgba(215, 204, 200, 0.4);
+        }
+
+        textarea { resize: vertical; height: 160px; }
+
+        /* Cozy Controls Wrapper */
+        .filter-controls {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        /* Cozy Button Styling */
+        button { 
+            background: #ddb892;       /* Warm Pastry Crust/Gold */
+            color: #4e342e;            /* Chocolate contrast text */
+            border: none; 
+            padding: 14px 20px; 
+            border-radius: 12px; 
+            cursor: pointer; 
+            font-size: 15px; 
+            width: 100%; 
+            font-weight: 600; 
+            transition: all 0.2s ease; 
+        }
+
+        button:hover { 
+            background: #b79492;       /* Soft Berry Blush Brown on hover */
+            color: white;
+            transform: translateY(-1px);
+        }
+        
+        button:active { transform: translateY(0); }
+
+        .error-msg { color: var(--danger); font-weight: 500; margin-top: 15px; display: none; font-size: 14px; }
+        
+        /* Pastel Note Display Cards */
+        .note-item { 
+            background: #fffdfb; 
+            border-left: 4px solid #ddb892; /* Crust accent line */
+            padding: 22px; 
+            border-radius: 12px; 
+            margin-bottom: 20px; 
+            transition: all 0.25s ease;
+            border-top: 1px solid var(--border);
+            border-right: 1px solid var(--border);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .note-item:hover { 
+            transform: scale(1.01);
+            background: var(--panel-bg);
+            box-shadow: 0 10px 20px rgba(109, 76, 65, 0.03);
+            border-color: var(--primary-light);
+        }
+
+        .note-item h4 { margin: 0 0 10px 0; color: var(--text-main); font-size: 17px; font-weight: 600; }
+        .note-item p { margin: 0; color: var(--text-muted); font-size: 14px; line-height: 1.6; white-space: pre-wrap; }
+        
+        .note-actions { margin-top: 18px; display: flex; gap: 10px; justify-content: flex-end; }
+        
+        .btn-edit { background: #f7d6c8; color: #7f5539; padding: 6px 14px; font-size: 12.5px; width: auto; border-radius: 8px; }
+        .btn-edit:hover { background: #f2b5a0; color: #fff; }
+        
+        .btn-delete { background: #ffe5ec; color: #fb6f92; padding: 6px 14px; font-size: 12.5px; width: auto; border-radius: 8px; }
+        .btn-delete:hover { background: var(--danger); color: #fff; }
+        
+        /* Pastel Modal Structure */
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(78, 52, 46, 0.2); backdrop-filter: blur(5px); justify-content: center; align-items: center; z-index: 100; }
+        .modal-content { background: white; padding: 35px; border-radius: 20px; width: 90%; max-width: 460px; border: 1px solid var(--border); }
+        .modal-actions { display: flex; gap: 10px; margin-top: 24px; }
+        .btn-cancel { background: #ede0d4; color: #7f5539; }
+        .btn-cancel:hover { background: #e6ccb2; }
+    </style>
+</head>
+<body>
+
+<div class="dashboard-wrapper">
+    
+    <div class="left-column">
+        <div class="title-banner-left">
+            <h2>Note WebApp</h2>
+        </div>
+        <form id="noteForm">
+            <div class="form-group">
+                <label for="title">Title</label>
+                <input type="text" id="title" placeholder="Topic name..." required>
+            </div>
+            <div class="form-group">
+                <label for="content">Content</label>
+                <textarea id="content" placeholder="Write thoughts here..." required></textarea>
+            </div>
+            <button type="submit">Submit Note</button>
+        </form>
+        <div id="errorLocation" class="error-msg">⚠️ Backend connectivity missing on port 8000.</div>
+    </div>
+
+    <div class="right-column">
+        <div class="title-banner-right">
+            <h3>Notes List</h3>
+        </div>
+        
+        <div class="filter-controls">
+            <input type="text" id="searchBar" placeholder="Search notes by title..." style="flex: 1.8;">
+            <select id="sortOrder" style="flex: 1; cursor: pointer;">
+                <option value="newest">Newest First</option>
+                <option value="oldest">Oldest First</option>
+                <option value="alphabetical">Alphabetical (A-Z)</option>
+            </select>
+        </div>
+
+        <div id="notesContainer">
+            </div>
+    </div>
+
+</div>
+
+<div id="editModal" class="modal">
+    <div class="modal-content">
+        <h3>Edit Note</h3>
+        <input type="hidden" id="editNoteId">
+        <div class="form-group">
+            <label for="editTitle">Title</label>
+            <input type="text" id="editTitle" required>
+        </div>
+        <div class="form-group">
+            <label for="editContent">Content</label>
+            <textarea id="editContent" required></textarea>
+        </div>
+        <div class="modal-actions">
+            <button type="button" id="saveEditBtn">Save Changes</button>
+            <button type="button" class="btn-cancel" onclick="closeModal()">Cancel</button>
+        </div>
+    </div>
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>

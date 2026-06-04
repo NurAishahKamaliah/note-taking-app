@@ -1,4 +1,5 @@
 from fastapi import FastAPI, Depends, HTTPException
+from fastapi.middleware.cors import CORSMiddleware  # <-- Added this line
 from sqlalchemy.orm import Session
 from pydantic import BaseModel
 from typing import List
@@ -9,6 +10,16 @@ from database import engine, get_db
 models.Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
+
+# ── CORS Middleware Configuration ──────────────────
+# This tells the backend container it is safe to accept requests from your frontend
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # Allows your frontend on port 8080 to communicate smoothly
+    allow_credentials=True,
+    allow_methods=["*"],  # Allows GET, POST, PUT, DELETE
+    allow_headers=["*"],
+)
 
 # ── Pydantic Schemas ──────────────────────────────
 # These define what data comes IN and goes OUT of your API

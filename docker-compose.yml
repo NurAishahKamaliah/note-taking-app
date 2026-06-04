@@ -27,17 +27,18 @@ services:
     networks:
       - note_network
 
-#  nginx:
-#    build: ./nginx
-#    container_name: note_nginx
-#    ports:
-#      - "80:80"
-#    volumes:
-#      - ./frontend:/usr/share/nginx/html:ro
-#    depends_on:
-#      - app
-#    networks:
-#     - note_network
+  nginx:
+    image: nginx:alpine
+    container_name: note_nginx
+    restart: always
+    ports:
+      - "8080:80"
+    volumes:
+      - ./frontend:/usr/share/nginx/html:ro
+    depends_on:
+      - app
+    networks:
+     - note_network
 
 networks:
   note_network:

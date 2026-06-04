@@ -1,0 +1,33 @@
+@baseUrl = http://localhost:8000
+
+### 1. GET ALL NOTES (Initially empty or shows existing notes)
+GET {{baseUrl}}/notes
+Accept: application/json
+
+### 2. CREATE A NEW NOTE
+# @name createNote
+POST {{baseUrl}}/notes
+Content-Type: application/json
+
+{
+    "title": "Automated Test Note",
+    "content": "This note was generated using the VS Code REST Client script."
+}
+
+### 3. GET A SINGLE NOTE BY ID
+# (We use the ID '1' as a baseline test)
+GET {{baseUrl}}/notes/1
+Accept: application/json
+
+### 4. UPDATE A NOTE BY ID
+PUT {{baseUrl}}/notes/1
+Content-Type: application/json
+
+{
+    "title": "Updated Test Note",
+    "content": "The DevOps automation test verified that updating works flawlessly."
+}
+
+### 5. DELETE A NOTE BY ID
+DELETE {{baseUrl}}/notes/1
+Accept: application/json
